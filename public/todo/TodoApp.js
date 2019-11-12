@@ -53,8 +53,9 @@ class TodoApp extends Component {
                 error.textContent = '';
 
                 try {
-                    const updated = await updateTodo(todo);
-                    console.log(updated);
+                    //did i need the updated variable?
+                    await updateTodo(todo);
+
                     const todos = this.state.todos;
                     if (todo.complete) {
                         todos.complete = false;
@@ -63,7 +64,6 @@ class TodoApp extends Component {
                     }
                     
                     todoList.update({ todos });
-                    console.log( todos, 'todos')
                 }
 
                 catch (err) {
@@ -123,6 +123,7 @@ class TodoApp extends Component {
                 <!-- show errors: -->
                 <p class="error"></p>
                 <main>
+                    <h2>Mama Vi wants you to be able to track your creatures. Use this handy list to keep track of what you have collected! Enter a creature that you are interested in finding and check it off once you do!</h2>
                     <!-- add todo goes here -->
                     <!-- todo list goes here -->
                 </main>
