@@ -9,10 +9,14 @@ class AddTodo extends Component {
         
         form.addEventListener('submit', async event => {
             event.preventDefault();
+            
+            const formData = new FormData(form);
 
+            
             const todoName = {
-                name: input.value
-            }
+                task: formData.get('todo'),
+                complete: false
+            };
 
             try {
                 await onAdd(todoName);
@@ -29,8 +33,8 @@ class AddTodo extends Component {
 
     renderHTML() {
         return /*html*/`
-            <form class="type-form">
-                <input name="type" required>
+            <form class="todo-form">
+                <input name="todo" required>
                 <button>Add</button>
             </form>
         `;

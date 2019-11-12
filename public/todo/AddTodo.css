@@ -1,0 +1,15 @@
+.todo-item {
+    display: flex;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+}
+
+.complete {
+    text-decoration: line-through;
+}
+
+span {
+    margin-right: 10px;
+}

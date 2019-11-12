@@ -20,11 +20,16 @@ app.use(express.json()); // enable reading incoming json data
 // API Routes
 
 // *** TODOS ***
-app.get('/api/todos', async (req, res) => {
+app.get('/api/todos', async(req, res) => {
 
     try {
         const result = await client.query(`
-            
+            SELECT 
+                t.id,
+                t.task,
+                t.complete
+            FROM todos t
+            ORDER by t.id asc;
         `);
 
         res.json(result.rows);
@@ -38,14 +43,18 @@ app.get('/api/todos', async (req, res) => {
 
 });
 
-app.post('/api/todos', async (req, res) => {
+//add a task
+
+app.post('/api/todos', async(req, res) => {
     const todo = req.body;
 
     try {
         const result = await client.query(`
-            
+            INSERT INTO TODOS (task, complete)
+            VALUES ($1, $2)
+            RETURNING *;
         `,
-        [/* pass in data */]);
+        [todo.task, todo.complete]);
 
         res.json(result.rows[0]);
     }
@@ -57,44 +66,63 @@ app.post('/api/todos', async (req, res) => {
     }
 });
 
-app.put('/api/todos/:id', async (req, res) => {
+//update a task aka mark complete
+app.put('/api/todos/:id', async(req, res) => {
     const id = req.params.id;
     const todo = req.body;
+    console.log(req.body);
 
     try {
         const result = await client.query(`
-            
-        `, [/* pass in data */]);
+            UPDATE todos
+            SET complete = $2
+            WHERE id = $1
+            RETURNING *
+        `, [id, todo.complete]);
      
         res.json(result.rows[0]);
     }
     catch (err) {
         console.log(err);
-        res.status(500).json({
-            error: err.message || err
-        });
+
+        if (err.code === '23505') {
+            res.status(400).json({
+                error: `Type "${todo.task}" already exists`
+            });
+        } else
+            res.status(500).json({
+                error: err.message || err
+            });
     }
 });
-
-app.delete('/api/todos/:id', async (req, res) => {
+//delete a todo
+app.delete('/api/todos/:id', async(req, res) => {
     // get the id that was passed in the route:
-    const id = 0; // ???
+    const id = req.params.id;
 
     try {
         const result = await client.query(`
-         
-        `, [/* pass data */]);
+            DELETE FROM todos
+            WHERE id = $1
+            RETURNING *
+        `, [id]);
         
         res.json(result.rows[0]);
     }
+
     catch (err) {
         console.log(err);
-        res.status(500).json({
-            error: err.message || err
-        });
+        if (err.code === '23503') {
+            res.status(400).json({
+                error: `Could not remove, type is in use. Make complete or delete all cats with that type first.`
+            });
+        } else {
+            res.status(500).json({
+                error: err.message || err
+            });
+        }
     }
 });
-
 // Start the server
 app.listen(PORT, () => {
     console.log('server running on PORT', PORT);

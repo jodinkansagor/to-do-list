@@ -43,7 +43,8 @@ class TodoApp extends Component {
 
             }
         });
-        main.appendChild(addTodos.renderDom());
+        console.log(addTodos);
+        main.appendChild(addTodos.renderDOM());
 
         const todoList = new TodoList({
             todos: [],
@@ -52,13 +53,17 @@ class TodoApp extends Component {
                 error.textContent = '';
 
                 try {
-                    const updated = updateTodo(todo);
-
+                    const updated = await updateTodo(todo);
+                    console.log(updated);
                     const todos = this.state.todos;
-                    const index = todos.indexOf(todo);
-                    todos.splice(index, 1, updated);
-
+                    if (todo.complete) {
+                        todos.complete = false;
+                    } else {
+                        todos.complete = true;
+                    }
+                    
                     todoList.update({ todos });
+                    console.log( todos, 'todos')
                 }
 
                 catch (err) {
@@ -95,7 +100,7 @@ class TodoApp extends Component {
         main.appendChild(todoList.renderDOM());
 
         try {
-            const todos = await getTodos({ showAll: true })
+            const todos = await getTodos({ showAll: true });
             this.state.todos = todos;
             todoList.update({ todos });
         }

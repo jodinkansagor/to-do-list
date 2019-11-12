@@ -10,6 +10,8 @@ header {
 
 img.logo {
     height: 100px;
+    transform: rotate(25deg);
+    padding-left: 20px;
 }
 
 h1 {

@@ -24,12 +24,13 @@ export function addTodo(todo) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(todo);
+        body: JSON.stringify(todo)
     });
 }
 
 export function updateTodo(todo) {  
     const url = `${URL}/todos/${todo.id}`;
+
     return fetchWithError(url, {
         method: 'PUT',
         headers: {
@@ -41,6 +42,7 @@ export function updateTodo(todo) {
 
 export function removeTodo(todoId) {  
     const url = `${URL}/todos/${todoId}`;
+    console.log(url);
     return fetchWithError(url, {
         method: 'DELETE'
     });

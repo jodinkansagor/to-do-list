@@ -1,8 +1,6 @@
 {
-  "name": "08-fsjs-server",
+  "name": "to-do-list",
   "version": "1.0.0",
-  "directories": {
-    "test": "test"
   "description": "Fullstack My Todo App",
   "main": "server.js",
   "scripts": {
@@ -20,14 +18,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jodinkansagor/to-do-list.git"
-  "author": "Alchemy Code Lab @alchemycodelab",
-  "license": "ISC",
-  "keywords": [],
-  "bugs": {
+    "url": "git+https://github.com/jodinkansagor/to-do-list.git",
+    "author": "Alchemy Code Lab @alchemycodelab",
+    "license": "ISC",
+    "keywords": [],
+    "bugs": {
     "url": "https://github.com/jodinkansagor/to-do-list/issues"
+    },
+  "homepage": "https://github.com/jodinkansagor/to-do-list#readme"
   },
-  "homepage": "https://github.com/jodinkansagor/to-do-list#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
