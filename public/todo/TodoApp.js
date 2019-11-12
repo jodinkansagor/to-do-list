@@ -8,7 +8,7 @@ import { getTodos, addTodo, updateTodo, removeTodo } from '../services/todo-api.
 class TodoApp extends Component {
 
     async onRender(dom) {
-        const header = new Header({ title: 'My Creatures' });
+        const header = new Header({ title: 'Mama Vi\'s Emporium of Magical Creatures'  });
         dom.prepend(header.renderDOM());
         
         const main = dom.querySelector('main');

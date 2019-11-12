@@ -19,7 +19,7 @@ class AddTodo extends Component {
             try {
                 await onAdd(todoName);
                 // this only runs if no error:
-                todoForm.reset();
+                form.reset();
                 document.activeElement.blur();
             }
             catch (err) {

@@ -23,9 +23,9 @@
     "license": "ISC",
     "keywords": [],
     "bugs": {
-    "url": "https://github.com/jodinkansagor/to-do-list/issues"
+      "url": "https://github.com/jodinkansagor/to-do-list/issues"
     },
-  "homepage": "https://github.com/jodinkansagor/to-do-list#readme"
+    "homepage": "https://github.com/jodinkansagor/to-do-list#readme"
   },
   "dependencies": {
     "cors": "^2.8.5",
