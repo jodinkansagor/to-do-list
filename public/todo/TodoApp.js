@@ -13,7 +13,7 @@ class TodoApp extends Component {
         
         const main = dom.querySelector('main');
         const error = dom.querySelector('.error');
-
+  
         const loading = new Loading({ loading: true });
         dom.appendChild(loading.renderDOM());
 
@@ -57,11 +57,7 @@ class TodoApp extends Component {
                     await updateTodo(todo);
 
                     const todos = this.state.todos;
-                    if (todo.complete) {
-                        todos.complete = false;
-                    } else {
-                        todos.complete = true;
-                    }
+                
                     
                     todoList.update({ todos });
                 }
@@ -100,7 +96,7 @@ class TodoApp extends Component {
         main.appendChild(todoList.renderDOM());
 
         try {
-            const todos = await getTodos({ showAll: true });
+            const todos = await getTodos();
             this.state.todos = todos;
             todoList.update({ todos });
         }
