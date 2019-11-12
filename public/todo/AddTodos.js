@@ -4,14 +4,20 @@ class AddTodo extends Component {
 
     onRender(form) {
         const onAdd = this.props.onAdd;
+        const todoForm = form.querySelector('form');
+        const input = form.querySelector("input[name=todo]");
         
         form.addEventListener('submit', async event => {
             event.preventDefault();
 
+            const todoName = {
+                name: input.value
+            }
+
             try {
-                await onAdd(catType);
+                await onAdd(todoName);
                 // this only runs if no error:
-                form.reset();
+                todoForm.reset();
                 document.activeElement.blur();
             }
             catch (err) {
@@ -23,8 +29,9 @@ class AddTodo extends Component {
 
     renderHTML() {
         return /*html*/`
-            <form>
-                
+            <form class="type-form">
+                <input name="type" required>
+                <button>Add</button>
             </form>
         `;
     }

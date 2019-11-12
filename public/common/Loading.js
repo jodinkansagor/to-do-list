@@ -9,7 +9,7 @@ class Loading extends Component {
         
         return /*html*/`
             <div class="loading-container">
-                <img src="assets/loading.gif">
+                <img src="assets/unicorn.gif">
             </div>
         `;
     }
