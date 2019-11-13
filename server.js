@@ -35,7 +35,6 @@ app.get('/api/todos', async(req, res) => {
         res.json(result.rows);
     }
     catch (err) {
-        console.log(err);
         res.status(500).json({
             error: err.message || err
         });
@@ -59,7 +58,6 @@ app.post('/api/todos', async(req, res) => {
         res.json(result.rows[0]);
     }
     catch (err) {
-        console.log(err);
         res.status(500).json({
             error: err.message || err
         });
@@ -70,7 +68,6 @@ app.post('/api/todos', async(req, res) => {
 app.put('/api/todos/:id', async(req, res) => {
     const id = req.params.id;
     const todo = req.body;
-    console.log(req.body);
 
     try {
         const result = await client.query(`
@@ -83,7 +80,6 @@ app.put('/api/todos/:id', async(req, res) => {
         res.json(result.rows[0]);
     }
     catch (err) {
-        console.log(err);
 
         if (err.code === '23505') {
             res.status(400).json({
@@ -111,7 +107,6 @@ app.delete('/api/todos/:id', async(req, res) => {
     }
 
     catch (err) {
-        console.log(err);
         if (err.code === '23503') {
             res.status(400).json({
                 error: `Could not remove, type is in use. Make complete or delete all cats with that type first.`
