@@ -19,6 +19,7 @@ class TodoApp extends Component {
 
         // initial todo load:
         const addTodos = new AddTodos({
+            // todos: [],
             onAdd: async todo => {
                 loading.update({ loading: true });
                 error.textContent = '';
@@ -56,9 +57,7 @@ class TodoApp extends Component {
                     //did i need the updated variable?
                     await updateTodo(todo);
 
-                    const todos = this.state.todos;
-                
-                    
+                    const todos = [this.state.todos];
                     todoList.update({ todos });
                 }
 

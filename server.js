@@ -15,7 +15,7 @@ const createAuthRoutes = require('./lib/auth/create-auth-routes');
 const authRoutes = createAuthRoutes({
     selectUser(email) {
         return client.query(`
-            SELECT id, email, hash 
+            SELECT id, email, hash, display_name as "displayName" 
             FROM users
             WHERE email = $1;
         `,
@@ -25,11 +25,11 @@ const authRoutes = createAuthRoutes({
     insertUser(user, hash) {
         console.log(user);
         return client.query(`
-            INSERT into users (email, hash)
+            INSERT into users (email, hash, display_name)
             VALUES ($1, $2, $3)
-            RETURNING id, email;
+            RETURNING id, email, display_name as "displayName";
         `,
-        [user.email, hash]
+        [user.email, hash, user.displayName]
         ).then(result => result.rows[0]);
     }
 });
@@ -52,6 +52,7 @@ app.use('/api', ensureAuth);
 
 // *** TODOS ***
 app.get('/api/todos', async(req, res) => {
+    
 
     try {
         const result = await client.query(`
@@ -60,8 +61,10 @@ app.get('/api/todos', async(req, res) => {
                 t.task,
                 t.complete
             FROM todos t
+            WHERE user_id = $1
             ORDER by t.id asc;
-        `);
+        `, 
+        [req.userId]);
 
         res.json(result.rows);
     }
@@ -80,11 +83,11 @@ app.post('/api/todos', async(req, res) => {
 
     try {
         const result = await client.query(`
-            INSERT INTO TODOS (task, complete)
-            VALUES ($1, $2)
+            INSERT INTO TODOS (task, complete, user_id)
+            VALUES ($1, $2, $3)
             RETURNING *;
         `,
-        [todo.task, todo.complete]);
+        [todo.task, todo.complete, req.userId]);
 
         res.json(result.rows[0]);
     }
@@ -104,9 +107,9 @@ app.put('/api/todos/:id', async(req, res) => {
         const result = await client.query(`
             UPDATE todos
             SET complete = $2
-            WHERE id = $1
+            WHERE id = $1 AND user_id = $3
             RETURNING *
-        `, [id, todo.complete]);
+        `, [id, todo.complete, req.userId]);
      
         res.json(result.rows[0]);
     }
@@ -130,9 +133,9 @@ app.delete('/api/todos/:id', async(req, res) => {
     try {
         const result = await client.query(`
             DELETE FROM todos
-            WHERE id = $1
+            WHERE id = $1 AND user_id = #2
             RETURNING *
-        `, [id]);
+        `, [id, req.userId]);
         
         res.json(result.rows[0]);
     }
