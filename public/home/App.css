@@ -24,7 +24,7 @@ main p.errors, user-display {
 }
 
 .errors {
-    color: red;
+    color: pink;
 }
 
 .no-display {

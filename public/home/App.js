@@ -26,11 +26,13 @@ class App extends Component {
                 localStorage.removeItem('USER');
                 this.update();
             });
+            return;
         }
 
         const errors = dom.querySelector('.errors');
         const signUpContainer = dom.querySelector('#signup-container');
         const signInContainer = dom.querySelector('#signin-container');
+        console.log(signInContainer);
 
         const signUp = new SignUp({
             onSignUp: async newUser => {
@@ -89,12 +91,8 @@ class App extends Component {
                 <!-- header goes here -->
                 <main>
                     <section class = "user-display">
-                        <p>
-                            Signed in as ${user}
-                        </p>
-                        <p>
-                            <button class = "logout">Log Out</button>
-                        </p>
+                        <p>Signed in as ${user}</p>
+                        <p><button class = "logout">Log Out</button></p>
                     </section>
                 </main>
             </div>

@@ -133,7 +133,7 @@ app.delete('/api/todos/:id', async(req, res) => {
     try {
         const result = await client.query(`
             DELETE FROM todos
-            WHERE id = $1 AND user_id = #2
+            WHERE id = $1 AND user_id = $2
             RETURNING *
         `, [id, req.userId]);
         

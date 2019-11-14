@@ -57,7 +57,7 @@ class TodoApp extends Component {
                     //did i need the updated variable?
                     await updateTodo(todo);
 
-                    const todos = [this.state.todos];
+                    const todos = this.state.todos;
                     todoList.update({ todos });
                 }
 
@@ -71,12 +71,15 @@ class TodoApp extends Component {
             },
 
             onRemove: async todo => {
+                console.log(todo);
                 loading.update({ loading: true });
                 error.textContent = '';
 
                 try {
+                    console.log(this.state.todos);
                     await removeTodo(todo.id);
                     const todos = this.state.todos;
+                    console.log(todos);
                     const index = todos.indexOf(todo);
                     todos.splice(index, 1);
 

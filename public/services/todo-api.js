@@ -9,7 +9,14 @@ if (!token && !(location.pathname === '/' || location.pathname === '/index.html'
 }
 
 async function fetchWithError(url, options) {
+    // if(token) {
+    //     options = options || {};
+    //     options.headers = options.headers || {};
+    //     options.headers.Authorization = token;
+    // }
     const response = await fetch(url, options);
+    console.log(response, 'response');
+    console.log(url, options, 'url and options');
     const data = await response.json();
 
     if (response.ok) {
@@ -36,7 +43,7 @@ export function signUp(user) {
 export function signIn(credentials) {
     const url = `${URL}/auth/signin`;
     return fetchWithError(url, {
-        methods: 'POST',
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
@@ -55,7 +62,7 @@ export function getTodos() {
     });
 }
 
-export function addTodo(todo) {  
+export function addTodo(todo) {      
     const url = `${URL}/todos`;
     return fetchWithError(url, {
         method: 'POST',
@@ -86,6 +93,7 @@ export function removeTodo(todoId) {
     return fetchWithError(url, {
         method: 'DELETE',
         headers: {
+            'Content-Type': 'applicaton/json',
             'Authorization': token
         }
     });
