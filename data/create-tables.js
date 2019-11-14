@@ -22,7 +22,7 @@ async function run() {
                 id SERIAL PRIMARY KEY NOT NULL,
                 task VARCHAR(512) NOT NULL,
                 complete BOOLEAN NOT NULL DEFAULT FALSE,
-                user_id VARCHAR(512) NOT NULL REFERENCES users(id)
+                user_id INTEGER NOT NULL REFERENCES users(id)
             );
         `);
 
