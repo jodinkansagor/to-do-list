@@ -9,6 +9,31 @@ const client = require('./lib/client');
 // Initiate database connection
 client.connect();
 
+//Auth
+const ensureAuth = require('./lib/auth/ensure-auth');
+const createAuthRoutes = require('./lib/auth/create-auth-routes');
+const authRoutes = createAuthRoutes({
+    selectUser(email) {
+        return client.query(`
+            SELECT id, email, hash, display_name as "displayName" 
+            FROM users
+            WHERE email = $1;
+        `,
+        [email]
+        ).then(result => result.rows[0]);
+    },
+    insertUser(user, hash) {
+        console.log(user);
+        return client.query(`
+            INSERT into users (email, hash, display_name)
+            VALUES ($1, $2, $3)
+            RETURNING id, email, display_name as "displayName";
+        `,
+        [user.email, hash, user.displayName]
+        ).then(result => result.rows[0]);
+    }
+});
+
 // Application Setup
 const app = express();
 const PORT = process.env.PORT;
@@ -17,10 +42,17 @@ app.use(cors()); // enable CORS request
 app.use(express.static('public')); // server files from /public folder
 app.use(express.json()); // enable reading incoming json data
 
+//setup auth routes
+app.use('/api/auth', authRoutes);
+
+//all pages that have db calls reuquire the token
+app.use('/api', ensureAuth);
+
 // API Routes
 
 // *** TODOS ***
 app.get('/api/todos', async(req, res) => {
+    
 
     try {
         const result = await client.query(`
@@ -29,13 +61,14 @@ app.get('/api/todos', async(req, res) => {
                 t.task,
                 t.complete
             FROM todos t
+            WHERE user_id = $1
             ORDER by t.id asc;
-        `);
+        `, 
+        [req.userId]);
 
         res.json(result.rows);
     }
     catch (err) {
-        console.log(err);
         res.status(500).json({
             error: err.message || err
         });
@@ -50,16 +83,15 @@ app.post('/api/todos', async(req, res) => {
 
     try {
         const result = await client.query(`
-            INSERT INTO TODOS (task, complete)
-            VALUES ($1, $2)
+            INSERT INTO TODOS (task, complete, user_id)
+            VALUES ($1, $2, $3)
             RETURNING *;
         `,
-        [todo.task, todo.complete]);
+        [todo.task, todo.complete, req.userId]);
 
         res.json(result.rows[0]);
     }
     catch (err) {
-        console.log(err);
         res.status(500).json({
             error: err.message || err
         });
@@ -70,20 +102,18 @@ app.post('/api/todos', async(req, res) => {
 app.put('/api/todos/:id', async(req, res) => {
     const id = req.params.id;
     const todo = req.body;
-    console.log(req.body);
 
     try {
         const result = await client.query(`
             UPDATE todos
             SET complete = $2
-            WHERE id = $1
+            WHERE id = $1 AND user_id = $3
             RETURNING *
-        `, [id, todo.complete]);
+        `, [id, todo.complete, req.userId]);
      
         res.json(result.rows[0]);
     }
     catch (err) {
-        console.log(err);
 
         if (err.code === '23505') {
             res.status(400).json({
@@ -103,15 +133,14 @@ app.delete('/api/todos/:id', async(req, res) => {
     try {
         const result = await client.query(`
             DELETE FROM todos
-            WHERE id = $1
+            WHERE id = $1 AND user_id = $2
             RETURNING *
-        `, [id]);
+        `, [id, req.userId]);
         
         res.json(result.rows[0]);
     }
 
     catch (err) {
-        console.log(err);
         if (err.code === '23503') {
             res.status(400).json({
                 error: `Could not remove, type is in use. Make complete or delete all cats with that type first.`

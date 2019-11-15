@@ -8,7 +8,7 @@ import { getTodos, addTodo, updateTodo, removeTodo } from '../services/todo-api.
 class TodoApp extends Component {
 
     async onRender(dom) {
-        const header = new Header({ title: 'Mama Vi\'s Emporium of Magical Creatures'  });
+        const header = new Header({ title: 'Mama Vi\'s Emporium of Magical Creatures' });
         dom.prepend(header.renderDOM());
         
         const main = dom.querySelector('main');
@@ -19,6 +19,7 @@ class TodoApp extends Component {
 
         // initial todo load:
         const addTodos = new AddTodos({
+            // todos: [],
             onAdd: async todo => {
                 loading.update({ loading: true });
                 error.textContent = '';
@@ -43,9 +44,9 @@ class TodoApp extends Component {
 
             }
         });
-        console.log(addTodos);
-        main.appendChild(addTodos.renderDOM());
 
+        main.appendChild(addTodos.renderDOM());
+        
         const todoList = new TodoList({
             todos: [],
             onUpdate: async todo => {
@@ -57,8 +58,6 @@ class TodoApp extends Component {
                     await updateTodo(todo);
 
                     const todos = this.state.todos;
-                
-                    
                     todoList.update({ todos });
                 }
 
@@ -72,12 +71,15 @@ class TodoApp extends Component {
             },
 
             onRemove: async todo => {
+                console.log(todo);
                 loading.update({ loading: true });
                 error.textContent = '';
 
                 try {
+                    console.log(this.state.todos);
                     await removeTodo(todo.id);
                     const todos = this.state.todos;
+                    console.log(todos);
                     const index = todos.indexOf(todo);
                     todos.splice(index, 1);
 

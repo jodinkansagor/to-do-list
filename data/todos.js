@@ -1,14 +1,17 @@
 module.exports = [
     {
         task: 'Unicorn',
-        complete: false
+        complete: false,
+        userId: 1
     },
     {
         task: 'Loch Ness Monster',
-        complete: true
+        complete: false,
+        userId: 1
     },
     {
         task: 'Yeti',
-        complete: false
+        complete: false,
+        userId: 1
     }
 ];
